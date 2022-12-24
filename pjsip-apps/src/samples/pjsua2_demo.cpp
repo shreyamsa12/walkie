@@ -147,6 +147,7 @@ void MyCall::onCallState(OnCallStateParam &prm)
     }
 }
 
+/*to receive the incoming call*/
 void MyCall::onCallMediaState(OnCallMediaStateParam &prm)
 {
     CallInfo ci = getInfo();
@@ -232,14 +233,14 @@ static void mainProg1(MyEndpoint &ep)
 
     // Add account
     AccountConfig acc_cfg;
-    acc_cfg.idUri = "sip:7002@192.168.0.111";
-    acc_cfg.regConfig.registrarUri = "sip:18.183.172.100";
+    acc_cfg.idUri = "sip:7002@192.168.0.111";                     //my uri with username
+    acc_cfg.regConfig.registrarUri = "sip:18.183.172.100";        //astersik server url/IP
 
 #if PJSIP_HAS_DIGEST_AKA_AUTH
     AuthCredInfo aci("Digest", "asterisk", "7001", PJSIP_CRED_DATA_EXT_AKA | PJSIP_CRED_DATA_PLAIN_PASSWD, "123");
     aci.akaK = "123";
 #else
-    AuthCredInfo aci("digest", "asterisk", "7002", 0, "456");
+    AuthCredInfo aci("digest", "asterisk", "7002", 0, "456");     //my cread as created in asterisk server sip.conf
 #endif
 
     acc_cfg.sipConfig.authCreds.push_back(aci);
@@ -258,8 +259,8 @@ static void mainProg1(MyEndpoint &ep)
     CallOpParam prm(true);
     prm.opt.audioCount = 1;
     prm.opt.videoCount = 0;
-    call->makeCall("sip:777@18.183.172.100", prm);
-    while(1);
+    call->makeCall("sip:777@18.183.172.100", prm);  //call extension@serverIp 
+    while(1);                                       //hang here to pick the calls
     // Hangup all calls
     pj_thread_sleep(4000);
     ep.hangupAllCalls();
